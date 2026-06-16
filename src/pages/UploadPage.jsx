@@ -95,9 +95,17 @@ function sampleEvenly(items, maxItems) {
   return Array.from({ length: maxItems }, (_, index) => items[Math.round(index * step)]);
 }
 
-function formatNumber(value, digits = 2) {
+function formatNumber(value, digits = 4) {
   if (!Number.isFinite(value)) return "-";
-  if (Math.abs(value) >= 10000 || (Math.abs(value) > 0 && Math.abs(value) < 0.01)) return value.toExponential(2);
+
+  if (Math.abs(value) >= 10000) {
+    return value.toExponential(2);
+  }
+
+  if (Math.abs(value) > 0 && Math.abs(value) < 0.001) {
+    return value.toExponential(3);
+  }
+
   return value.toFixed(digits);
 }
 
@@ -215,8 +223,19 @@ export default function UploadPage() {
   const xTicks = useMemo(() => createTicks(xMin, xMax), [xMin, xMax]);
   const yTicks = useMemo(() => createTicks(yMin, yMax), [yMin, yMax]);
 
-  const dataSlope = points.length > 1 ? (yMax - yMin) / Math.max(1e-9, xMax - xMin) : 1;
-  const slopeSpan = Math.max(1, Math.abs(dataSlope), Math.abs(regression.slope)) * 1.3;
+  const dataSlope =
+  points.length > 1
+    ? (yMax - yMin) / Math.max(1e-9, xMax - xMin)
+    : 1;
+
+  // typischerweise sinnvolle Steigungen
+  const slopeSpan =
+    Math.max(
+      Math.abs(dataSlope) * 20,
+      Math.abs(regression.slope) * 10,
+      0.01
+    );
+
   const slopeMin = regression.slope - slopeSpan;
   const slopeMax = regression.slope + slopeSpan;
   const interceptSpan = Math.max(yMax - yMin, 1) * 0.9;
@@ -427,7 +446,7 @@ export default function UploadPage() {
                     <label>Steigung m</label>
                     <span style={{ backgroundColor: "#21262d", padding: "4px 12px", borderRadius: "12px", fontSize: "12px" }}>{formatNumber(activeSlope)}</span>
                   </div>
-                  <input type="range" min={slopeMin} max={slopeMax} step={Math.max((slopeMax - slopeMin) / 4000, 0.0005)} value={activeSlope} onChange={(event) => setSlope(parseFloat(event.target.value))} style={{ width: "100%" }} />
+                  <input type="range" min={slopeMin} max={slopeMax} step={(slopeMax - slopeMin) / 20000} value={activeSlope} onChange={(event) => setSlope(parseFloat(event.target.value))} style={{ width: "100%" }} />
                 </div>
 
                 <div style={{ marginBottom: "16px" }}>
