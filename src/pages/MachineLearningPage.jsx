@@ -1,268 +1,464 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-const ROWS = [
-  {
-    id: "step-1",
-    step: "1. Datensammlung",
-    technical: "Die KI erhält riesige Mengen Text, Bücher, Webseiten und Dialoge als Lernmaterial.",
-    human: "Ein Kind hört Sprache, sieht Bilder, erlebt Situationen und sammelt Erfahrungen.",
-  },
-  {
-    id: "step-2",
-    step: "2. Training",
-    technical: "Beim Training versucht die KI, das nächste Wort vorherzusagen. Ihre internen Parameter werden angepasst.",
-    human: "Ein Kind übt Sprache durch Wiederholung: Es probiert Wörter aus und verbessert sich durch Erfahrung.",
-  },
-  {
-    id: "step-3",
-    step: "3. Fehler messen (Lossfunktion)",
-    technical: "Die Lossfunktion misst, wie falsch die Vorhersage der KI war. Hoher Fehler = schlechte Antwort.",
-    human: "Ein Kind merkt durch Reaktionen („Das heißt Hund, nicht Katze“) oder eigenes Scheitern, dass etwas falsch war.",
-  },
-  {
-    id: "step-4",
-    step: "4. Gewichte anpassen",
-    technical: "Die KI verändert Milliarden mathematischer Gewichte, um künftig bessere Antworten zu geben.",
-    human: "Im Gehirn verändern sich Verbindungen zwischen Nervenzellen (Synapsen).",
-  },
-  {
-    id: "step-5",
-    step: "5. Wiederholung über viele Durchläufe (Epochen)",
-    technical: "Die gleichen Daten werden mehrfach verarbeitet, bis die KI stabil lernt.",
-    human: "Kinder wiederholen Dinge ständig: Wörter, Bewegungen, Regeln.",
-  },
-  {
-    id: "step-6",
-    step: "6. Validation (Validierungsdaten)",
-    technical: "Ein Teil der Daten wird nicht zum direkten Lernen genutzt. Damit prüft man, ob die KI wirklich verstanden hat oder nur „auswendig gelernt“ hat.",
-    human: "Lehrer testen Kinder mit neuen Aufgaben, die sie vorher nicht exakt gesehen haben.",
-  },
-  {
-    id: "step-7",
-    step: "7. Testen",
-    technical: "Nach dem Training wird die KI mit komplett neuen Daten geprüft.",
-    human: "Klassenarbeiten oder Alltagssituationen prüfen das Wissen eines Kindes.",
-  },
-  {
-    id: "step-8",
-    step: "8. Overfitting vermeiden",
-    technical: "Die KI soll nicht nur Trainingsdaten auswendig lernen, sondern verallgemeinern können.",
-    human: "Kinder sollen nicht nur Antworten auswendig lernen, sondern Konzepte verstehen.",
-  },
-  {
-    id: "step-9",
-    step: "9. Feedback nach dem Training",
-    technical: "Menschen bewerten Antworten der KI (z. B. RLHF bei ChatGPT). Gute Antworten werden verstärkt.",
-    human: "Kinder erhalten Lob, Kritik und soziale Rückmeldungen.",
-  },
-  {
-    id: "step-10",
-    step: "10. Nutzung nach dem Lernen",
-    technical: "Die KI antwortet auf neue Eingaben basierend auf gelernten Mustern.",
-    human: "Ein Kind nutzt gelerntes Wissen im Alltag.",
-  },
+const SORT_ZONES = [
+  { key: "before", label: "Vor dem Training" },
+  { key: "during", label: "Beim Training" },
+  { key: "after", label: "Nach dem Training" },
+  { key: "discard", label: "Ausgeschieden (falsch)" },
 ];
 
-const COLUMNS = [
-  { key: "technical", label: "Was passiert technisch?" },
-  { key: "human", label: "Vergleich mit menschlichem Lernen (Kind)" },
+const SORT_CARDS = [
+  {
+    id: "A",
+    text: "Die Entwickler legen die Frage fest: Wie hoch ist die Kaltmiete einer Wohnung, wenn bestimmte Eigenschaften der Wohnung bekannt sind?",
+    zone: "before",
+  },
+  {
+    id: "B",
+    text: "Es werden Daten über viele bereits vermietete Wohnungen gesammelt (z. B. Wohnfläche und Kaltmiete).",
+    zone: "before",
+  },
+  {
+    id: "C",
+    text: "Die Daten werden überprüft; fehlende oder falsche Angaben werden entfernt oder korrigiert.",
+    zone: "before",
+  },
+  {
+    id: "D",
+    text: "Es wird festgelegt, welche Angaben das Modell verwenden soll (z. B. Wohnfläche als Eingabe, Kaltmiete als Ziel).",
+    zone: "before",
+  },
+  {
+    id: "E",
+    text: "Die vorhandenen Daten werden in Trainingsdaten und Testdaten aufgeteilt.",
+    zone: "before",
+  },
+  {
+    id: "F",
+    text: "Als Modell wird zunächst eine lineare Regression verwendet, die eine Gerade findet, die gut passt.",
+    zone: "during",
+  },
+  {
+    id: "G",
+    text: "Das Modell macht mit den Trainingsdaten Vorhersagen und berechnet die Abweichungen zu den tatsächlichen Werten.",
+    zone: "during",
+  },
+  {
+    id: "H",
+    text: "Die Lage der Regressionsgeraden wird schrittweise verändert, um Fehler zu minimieren — das ist Training.",
+    zone: "during",
+  },
+  {
+    id: "I",
+    text: "Das fertige Modell wird mit Testdaten überprüft (Daten, die es beim Training nicht gesehen hat).",
+    zone: "after",
+  },
+  {
+    id: "J",
+    text: "Vorhersagen werden mit den tatsächlichen Mieten aus den Testdaten verglichen, um die Qualität zu beurteilen.",
+    zone: "after",
+  },
+  {
+    id: "K",
+    text: "Die Ergebnisse werden kritisch untersucht: Genauigkeit, Ausgewogenheit der Daten und Anwendbarkeit prüfen.",
+    zone: "after",
+  },
+  {
+    id: "L",
+    text: "Das überprüfte Modell kann nun für eine neue Wohnung eine Miete vorhersagen.",
+    zone: "after",
+  },
+  {
+    id: "M",
+    text: "Da die Maschine trainiert wurde, versteht sie nun selbstständig, was eine Wohnung ist und warum eine bestimmte Miete gerecht ist.",
+    zone: "discard",
+  },
+  {
+    id: "N",
+    text: "Die Testdaten werden während des Trainings immer wieder verwendet, bis das Modell bei diesen Daten möglichst gute Ergebnisse erzielt.",
+    zone: "discard",
+  },
 ];
 
 function shuffle(items) {
   return items
-    .map((item) => ({ item, order: Math.random() }))
+    .map((item) => ({
+      item,
+      order: Math.random(),
+    }))
     .sort((a, b) => a.order - b.order)
     .map(({ item }) => item);
 }
 
-function buildCards() {
-  return ROWS.flatMap((row) =>
-    COLUMNS.map((column) => ({
-      id: `${row.id}-${column.key}`,
-      target: `${row.id}-${column.key}`,
-      text: row[column.key],
-    }))
-  );
-}
-
-export default function MachineLearningPage() {
-  const initialCards = useMemo(() => shuffle(buildCards()), []);
-  const [cards, setCards] = useState(initialCards);
-  const [placements, setPlacements] = useState({});
+export default function SortCardsActivity() {
+  const [cards, setCards] = useState(() => shuffle(SORT_CARDS));
+  const [placement, setPlacement] = useState({});
   const [checked, setChecked] = useState(false);
+  const [selectedLearningAnswer, setSelectedLearningAnswer] = useState("");
 
-  const placedCardIds = new Set(Object.values(placements));
-  const bankCards = cards.filter((card) => !placedCardIds.has(card.id));
-  const correctCount = Object.entries(placements).filter(([slotId, cardId]) => slotId === cards.find((card) => card.id === cardId)?.target).length;
-  const totalSlots = ROWS.length * COLUMNS.length;
+  const zoneToCards = SORT_ZONES.reduce(
+    (result, zone) => ({
+      ...result,
+      [zone.key]: Object.keys(placement).filter(
+        (cardId) => placement[cardId] === zone.key
+      ),
+    }),
+    {}
+  );
 
   function handleDragStart(event, cardId) {
     event.dataTransfer.setData("text/plain", cardId);
     event.dataTransfer.effectAllowed = "move";
   }
 
-  function handleDrop(event, slotId) {
+  function handleDropToZone(event, zoneKey) {
     event.preventDefault();
+
     const cardId = event.dataTransfer.getData("text/plain");
-    if (!cardId) return;
 
-    setPlacements((current) => {
-      const next = Object.fromEntries(Object.entries(current).filter(([, placedCardId]) => placedCardId !== cardId));
-      return { ...next, [slotId]: cardId };
-    });
+    if (!cardId) {
+      return;
+    }
+
+    setPlacement((current) => ({
+      ...current,
+      [cardId]: zoneKey,
+    }));
+
     setChecked(false);
   }
 
-  function returnCard(cardId) {
-    setPlacements((current) => Object.fromEntries(Object.entries(current).filter(([, placedCardId]) => placedCardId !== cardId)));
+  function handleReturn(cardId) {
+    setPlacement((current) =>
+      Object.fromEntries(
+        Object.entries(current).filter(
+          ([placedCardId]) => placedCardId !== cardId
+        )
+      )
+    );
+
     setChecked(false);
   }
 
-  function resetTable() {
-    setCards(shuffle(buildCards()));
-    setPlacements({});
+  function reset() {
+    setCards(shuffle(SORT_CARDS));
+    setPlacement({});
     setChecked(false);
   }
 
-  function getCard(cardId) {
-    return cards.find((card) => card.id === cardId);
-  }
-
-  function getSlotState(slotId) {
-    if (!checked || !placements[slotId]) return "#30363d";
-    return placements[slotId] === slotId ? "#2ea043" : "#f85149";
-  }
+  const correctCount = Object.entries(placement).filter(
+    ([cardId, zoneKey]) =>
+      SORT_CARDS.find((card) => card.id === cardId)?.zone === zoneKey
+  ).length;
 
   return (
-    <main style={{ minHeight: "100vh", backgroundColor: "#0d1117", color: "#e6edf3", padding: "24px", fontFamily: "'IBM Plex Mono', monospace" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-        <h1 style={{ fontFamily: "'Spectral', serif", fontSize: "clamp(24px, 5vw, 40px)", fontWeight: 600, margin: "0 0 12px", letterSpacing: "-0.02em", color: "#e6edf3" }}>
-          Machine Learning: Künstliche Intelligenz
+    <main
+      style={{
+        minHeight: "100vh",
+        padding: "24px",
+        backgroundColor: "#0d1117",
+        color: "#e6edf3",
+        fontFamily: "'IBM Plex Mono', monospace",
+      }}
+    >
+      <section
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "16px",
+          border: "1px solid #30363d",
+          borderRadius: "8px",
+          backgroundColor: "#161b22",
+        }}
+      >
+        <h1
+          style={{
+            margin: "0 0 12px",
+            fontSize: "24px",
+            fontWeight: 700,
+          }}
+        >
+          Wie lernt eine Maschine? — Kartensortierung
         </h1>
-        <header style={{ marginBottom: "20px", textAlign: "left" }}>
-          <h1 style={{ fontSize: "28px", fontWeight: "bold", margin: "0 0 8px" }}>Machine Learning: Schritte zuordnen</h1>
-        </header>
 
-        <section style={{ border: "1px solid #30363d", borderRadius: "8px", backgroundColor: "#161b22", padding: "16px", marginBottom: "18px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center", marginBottom: "12px", flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 600 }}>Einträge</div>
-            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-              {checked && <span style={{ color: "#8b949e", fontSize: "13px" }}>{correctCount} von {totalSlots} richtig</span>}
-              <button className="btn btn-start" onClick={() => setChecked(true)}>Prüfen</button>
-              <button className="btn btn-dark" onClick={resetTable}>Neu mischen</button>
-            </div>
-          </div>
+        <p style={{ marginTop: 0, color: "#c9d1d9" }}>
+          Ziehe die Karten in die passende Phase:{" "}
+          <strong>Vor dem Training</strong>,{" "}
+          <strong>Beim Training</strong>,{" "}
+          <strong>Nach dem Training</strong> oder{" "}
+          <strong>Ausgeschieden</strong>.
+        </p>
 
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "8px",
+            marginBottom: "12px",
+          }}
+        >
+          <button onClick={() => setChecked(true)}>Prüfen</button>
+          <button onClick={reset}>Neu mischen</button>
+
+          <span style={{ marginLeft: "8px", color: "#8b949e" }}>
+            {Object.keys(placement).length} / {SORT_CARDS.length} Karten
+            einsortiert
+          </span>
+
+          {checked && (
+            <span style={{ color: "#8b949e" }}>
+              · {correctCount} von {SORT_CARDS.length} richtig
+            </span>
+          )}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(280px, 1fr) minmax(400px, 2fr)",
+            gap: "12px",
+          }}
+        >
           <div
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
               event.preventDefault();
-              const cardId = event.dataTransfer.getData("text/plain");
-              if (cardId) returnCard(cardId);
+
+              const cardId =
+                event.dataTransfer.getData("text/plain");
+
+              if (cardId) {
+                handleReturn(cardId);
+              }
             }}
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "10px" }}
+            style={{
+              padding: "12px",
+              border: "1px solid #30363d",
+              borderRadius: "8px",
+              backgroundColor: "#0d1117",
+            }}
           >
-            {bankCards.map((card) => (
+            <div
+              style={{
+                marginBottom: "8px",
+                color: "#c9d1d9",
+                fontWeight: 600,
+              }}
+            >
+              Karten
+            </div>
+
+            <div style={{ display: "grid", gap: "8px" }}>
+              {cards
+                .filter((card) => !placement[card.id])
+                .map((card) => (
+                  <div
+                    key={card.id}
+                    draggable
+                    onDragStart={(event) =>
+                      handleDragStart(event, card.id)
+                    }
+                    style={{
+                      padding: "10px",
+                      border: "1px solid #30363d",
+                      borderRadius: "6px",
+                      backgroundColor: "#111820",
+                      color: "#c9d1d9",
+                      cursor: "grab",
+                    }}
+                  >
+                    {card.id}. {card.text}
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: "8px",
+            }}
+          >
+            {SORT_ZONES.map((zone) => (
               <div
-                key={card.id}
-                draggable
-                onDragStart={(event) => handleDragStart(event, card.id)}
+                key={zone.key}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) =>
+                  handleDropToZone(event, zone.key)
+                }
                 style={{
-                  minHeight: "76px",
-                  border: "1px solid #30363d",
+                  minHeight: "160px",
+                  padding: "10px",
+                  border: "2px dashed #30363d",
                   borderRadius: "8px",
                   backgroundColor: "#0d1117",
-                  padding: "10px",
-                  color: "#c9d1d9",
-                  cursor: "grab",
-                  fontSize: "13px",
-                  lineHeight: 1.4,
                 }}
               >
-                {card.text}
+                <div
+                  style={{
+                    marginBottom: "8px",
+                    fontWeight: 700,
+                    color: "#e6edf3",
+                  }}
+                >
+                  {zone.label}
+                </div>
+
+                <div style={{ display: "grid", gap: "6px" }}>
+                  {zoneToCards[zone.key].map((cardId) => {
+                    const card = SORT_CARDS.find(
+                      (item) => item.id === cardId
+                    );
+
+                    const isCorrect = checked
+                      ? card?.zone === zone.key
+                      : null;
+
+                    return (
+                      <div
+                        key={cardId}
+                        draggable
+                        onDragStart={(event) =>
+                          handleDragStart(event, cardId)
+                        }
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "8px",
+                          border: "1px solid #30363d",
+                          borderRadius: "6px",
+                          backgroundColor:
+                            isCorrect === null
+                              ? "#111820"
+                              : isCorrect
+                                ? "#163b1f"
+                                : "#3d1010",
+                          color: "#c9d1d9",
+                          cursor: "grab",
+                        }}
+                      >
+                        <div
+                          style={{
+                            paddingRight: "8px",
+                            fontSize: "13px",
+                          }}
+                        >
+                          {cardId}. {card?.text}
+                        </div>
+
+                        <button
+                          type="button"
+                          aria-label={`Karte ${cardId} zurücklegen`}
+                          onClick={() => handleReturn(cardId)}
+                          style={{
+                            border: "none",
+                            background: "transparent",
+                            color: "#8b949e",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ↩
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section style={{ overflowX: "auto", border: "1px solid #30363d", borderRadius: "8px", backgroundColor: "#161b22" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "1120px", textAlign: "left" }}>
-            <thead>
-              <tr>
-                <th style={headerStyle}>Schritt bei KI (z. B. ChatGPT)</th>
-                {COLUMNS.map((column) => (
-                  <th key={column.key} style={headerStyle}>{column.label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr key={row.id}>
-                  <th style={stepCellStyle}>{row.step}</th>
-                  {COLUMNS.map((column) => {
-                    const slotId = `${row.id}-${column.key}`;
-                    const card = getCard(placements[slotId]);
-                    return (
-                      <td
-                        key={slotId}
-                        onDragOver={(event) => event.preventDefault()}
-                        onDrop={(event) => handleDrop(event, slotId)}
-                        style={{
-                          ...cellStyle,
-                          borderColor: getSlotState(slotId),
-                          backgroundColor: card ? "#0d1117" : "#111820",
-                        }}
-                      >
-                        {card ? (
-                          <div
-                            draggable
-                            onDragStart={(event) => handleDragStart(event, card.id)}
-                            onDoubleClick={() => returnCard(card.id)}
-                            style={{ cursor: "grab", color: "#c9d1d9", lineHeight: 1.4 }}
-                          >
-                            {card.text}
-                          </div>
-                        ) : (
-                          <span style={{ color: "#6e7681" }}>Hier ablegen</span>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <p
+          style={{
+            marginBottom: 0,
+            color: "#8b949e",
+            fontSize: "13px",
+          }}
+        >
+          Hinweis: Zwei Karten sind absichtlich falsch oder irreführend
+          und gehören in „Ausgeschieden“.
+        </p>
+
+        <section
+          style={{
+            marginTop: "24px",
+            padding: "16px",
+            border: "1px solid #30363d",
+            borderRadius: "8px",
+            backgroundColor: "#0f1720",
+          }}
+        >
+          <h2
+            style={{
+              margin: "0 0 12px",
+              fontSize: "20px",
+              fontWeight: 700,
+            }}
+          >
+            Zusatzauftrag 2: Was bedeutet „lernen"?
+          </h2>
+
+          <p style={{ color: "#c9d1d9", marginTop: 0 }}>
+            Entscheide, welche Aussage am besten beschreibt, was mit „Lernen"
+            bei einer Maschine gemeint ist.
+          </p>
+
+          <div style={{ display: "grid", gap: "10px", marginTop: "16px" }}>
+            {[
+              {
+                id: "1",
+                label:
+                  "Die Maschine denkt über die Aufgabe nach und versteht nach einiger Zeit das Problem.",
+              },
+              {
+                id: "2",
+                label:
+                  "Das Modell verändert seine Einstellungen so, dass seine Vorhersagen bei den Trainingsdaten möglichst wenige Fehler machen.",
+              },
+              {
+                id: "3",
+                label:
+                  "Die Maschine speichert jede einzelne Antwort und gibt bei einer neuen Aufgabe eine gespeicherte Antwort zurück.",
+              },
+            ].map((option) => (
+              <label
+                key={option.id}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "10px",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: `1px solid ${
+                    selectedLearningAnswer === option.id
+                      ? "#1f6feb"
+                      : "#30363d"
+                  }`,
+                  backgroundColor: "#111820",
+                  color: "#c9d1d9",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="radio"
+                  name="learning-answer"
+                  value={option.id}
+                  checked={selectedLearningAnswer === option.id}
+                  onChange={(event) =>
+                    setSelectedLearningAnswer(event.target.value)
+                  }
+                  style={{ marginTop: "4px" }}
+                />
+                <span style={{ lineHeight: 1.5 }}>{option.label}</span>
+              </label>
+            ))}
+          </div>
         </section>
-      </div>
+      </section>
     </main>
   );
 }
-
-const headerStyle = {
-  borderBottom: "1px solid #30363d",
-  borderRight: "1px solid #30363d",
-  padding: "12px",
-  backgroundColor: "#0d1117",
-  color: "#e6edf3",
-  fontSize: "13px",
-  verticalAlign: "top",
-};
-
-const stepCellStyle = {
-  borderRight: "1px solid #30363d",
-  borderBottom: "1px solid #30363d",
-  padding: "12px",
-  color: "#e6edf3",
-  fontSize: "13px",
-  width: "210px",
-  verticalAlign: "top",
-};
-
-const cellStyle = {
-  border: "1px solid #30363d",
-  padding: "10px",
-  minHeight: "92px",
-  width: "300px",
-  verticalAlign: "top",
-  fontSize: "13px",
-};

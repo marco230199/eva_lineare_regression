@@ -57,6 +57,7 @@ export default function LossfunctionPage() {
   const [showResiduals, setShowResiduals] = useState(true);
   const [showLoss, setShowLoss] = useState(true);
   const [showLossFormula, setShowLossFormula] = useState(false);
+  const [showPointLabels, setShowPointLabels] = useState(false);
   const [showOptimalLine, setShowOptimalLine] = useState(false);
   const [draggedId, setDraggedId] = useState(null);
 
@@ -199,7 +200,7 @@ export default function LossfunctionPage() {
             <ol style={{ margin: 0, paddingLeft: "22px" }}>
               <li style={{ marginBottom: "6px" }}>
                 Versuche wieder eine möglichst gut passende Gerade durch die Punkte der unterschiedlichen Datensätze zu legen. Beschreibe dieses mal, wie du dabei vorgehst.
-                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Hinweis: Du kannst in der Simulation den Button „Residuen anzeigen" drücken.</div>
+                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Hinweis: Du kannst in der Simulation den Button „Abweichungen anzeigen" drücken.</div>
               </li>
               <li style={{ marginBottom: "6px" }}>
                 Wähle jetzt den Datensatz „3 Punkte" aus. Stelle als Regressionsgerade die Gerade <InlineMath math={String.raw`y = 0{,}5x + 1`} /> und danach die Gerade <InlineMath math={String.raw`y = 0{,}8x + 0{,}5`} /> ein. Beurteile, welche besser passt.
@@ -207,13 +208,14 @@ export default function LossfunctionPage() {
               <li style={{ marginBottom: "6px" }}>
                 Klicke jetzt auf „Lossfunktion anzeigen". Das ist die Formel, mit der ausgerechnet wird, wie gut die Gerade durch die Punkte gelegt wurde. Erkläre diese Formel mithilfe des Graphen.
               </li>
-              <li style={{ marginBottom: "6px" }}>Überlege dir einen Grund, warum die Abstände der Punkte zu der Geraden quadriert werden, anstatt sie einfach zu addieren.</li>
               <li style={{ marginBottom: "6px" }}>
                 Gehe wieder zum Datensatz „3 Punkte" und stelle nacheinander die beiden oben angegebenen Geraden ein. Berechne jeweils den Loss <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Abstände der Punkte zu den Geraden am Graphen abliest und in die Formel für <InlineMath math={String.raw`L`} /> einsetzt.
               </li>
               <li>
                 Berechne den Verlust <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Formel für <InlineMath math={String.raw`L`} /> direkt für die drei angegebenen Punkte anwendest.
               </li>
+              <li style={{ marginBottom: "6px" }}>Überlege dir einen Grund, warum die Abstände der Punkte zu der Geraden quadriert werden, anstatt sie einfach zu addieren.</li>
+
             </ol>
           </section>
         </div>
@@ -315,7 +317,7 @@ export default function LossfunctionPage() {
                       setDraggedId(point.id);
                     }}
                   />
-                  {showLossFormula && (
+                  {showPointLabels && (
                     <text x={xScale(point.x) + 10} y={yScale(point.y) - 10} fill="#79c0ff" fontSize="12" fontFamily="'IBM Plex Mono', monospace">{`y${toSubscript(i + 1)}`}</text>
                   )}
                 </g>
@@ -391,7 +393,9 @@ export default function LossfunctionPage() {
                 <button onClick={() => setShowLossFormula((s) => !s)} style={{ padding: "8px 12px", backgroundColor: showLossFormula ? "#1f6feb" : "transparent", color: showLossFormula ? "#e6edf3" : "#1f6feb", border: showLossFormula ? "none" : "1px solid #1f6feb", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>
                   {showLossFormula ? "Lossfunktion ausblenden" : "Lossfunktion L anzeigen"}
                 </button>
-                <div style={{ color: "#8b949e", fontSize: "13px" }}>Label der Punkte als y₁, y₂ ... anzeigen</div>
+                <button onClick={() => setShowPointLabels((s) => !s)} style={{ padding: "8px 12px", marginLeft: "6px", backgroundColor: showPointLabels ? "#1f6feb" : "transparent", color: showPointLabels ? "#e6edf3" : "#8b949e", border: showPointLabels ? "none" : "1px solid #30363d", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: "600" }}>
+                  {showPointLabels ? "Punkte-Labels ausblenden" : "Punkte-Labels anzeigen"}
+                </button>
               </div>
 
               {showLossFormula && (
