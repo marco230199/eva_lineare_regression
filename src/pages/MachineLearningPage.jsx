@@ -59,7 +59,7 @@ export default function MachineLearningPage() {
       <section style={{ maxWidth: 800, margin: "0 auto" }}>
         <h1 style={{ fontSize: 22, marginBottom: 6 }}>Ordnungsaufgabe: Ablauf von KI-Modellen</h1>
 
-        <p style={{ color: "#333" }}>
+        <p style={{ color: "var(--text)" }}>
           Ziehe die Aussagen in die richtige Reihenfolge (von 1 → 6) und klicke auf <strong>Prüfen</strong>.
         </p>
 
@@ -73,9 +73,10 @@ export default function MachineLearningPage() {
               onDrop={(e) => handleDrop(e, idx)}
               style={{
                 padding: 12,
-                border: "1px solid #ccc",
+                border: "1px solid var(--border)",
                 borderRadius: 6,
-                background: "#fff",
+                background: "var(--code-bg)",
+                color: "var(--text-h)",
                 cursor: "grab",
               }}
             >
@@ -89,7 +90,7 @@ export default function MachineLearningPage() {
           <button onClick={checkOrder}>Prüfen</button>
           <button onClick={reshuffle}>Neu mischen</button>
           {result && (
-            <span style={{ alignSelf: "center", color: result.correct ? "green" : "#333" }}>
+            <span style={{ alignSelf: "center", color: result.correct ? "green" : "var(--text)" }}>
               {result.correct ? "Alle Aussagen richtig angeordnet." : `${result.correctCount} von ${STATEMENTS.length} richtig`}
             </span>
           )}
