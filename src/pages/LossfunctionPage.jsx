@@ -199,23 +199,27 @@ export default function LossfunctionPage() {
             <h2 style={{ fontSize: "18px", fontWeight: "600", color: "#e6edf3", margin: "0 0 10px" }}>Lernaufgaben</h2>
             <ol style={{ margin: 0, paddingLeft: "22px" }}>
               <li style={{ marginBottom: "6px" }}>
-                Versuche wieder eine möglichst gut passende Gerade durch die Punkte der unterschiedlichen Datensätze zu legen. Beschreibe dieses mal, wie du dabei vorgehst.
-                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Hinweis: Du kannst in der Simulation den Button „Abweichungen anzeigen" drücken.</div>
+                Wähle einen der Datensätze aus und versuche wieder, eine möglichst passende Gerade durch die Datenpunkte zu legen.
+                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Beschreibe dieses Mal, wie du dabei vorgehst.</div>
+                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Hinweis: Du kannst in der Simulation den Button „Abweichungen anzeigen“ drücken.</div>
               </li>
               <li style={{ marginBottom: "6px" }}>
-                Wähle jetzt den Datensatz „3 Punkte" aus. Stelle als Regressionsgerade die Gerade <InlineMath math={String.raw`y = 0{,}5x + 1`} /> und danach die Gerade <InlineMath math={String.raw`y = 0{,}8x + 0{,}5`} /> ein. Beurteile, welche besser passt.
+                Wähle jetzt den Datensatz „3 Punkte“ aus. Stelle als Regressionsgerade die Gerade <InlineMath math={String.raw`y = 0{,}5x + 1`} /> und danach die Gerade <InlineMath math={String.raw`y = 0{,}6x + 3`} /> ein. Beurteile, welche der beiden Geraden besser passt.
               </li>
               <li style={{ marginBottom: "6px" }}>
-                Klicke jetzt auf „Lossfunktion anzeigen". Das ist die Formel, mit der ausgerechnet wird, wie gut die Gerade durch die Punkte gelegt wurde. Erkläre diese Formel mithilfe des Graphen.
+                Optional:
+                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Klicke jetzt auf „Lossfunktion anzeigen“. Das ist die Formel, mit der ausgerechnet wird, wie gut die Gerade durch die Punkte gelegt wurde. Erkläre diese Formel mithilfe des Graphen.</div>
               </li>
               <li style={{ marginBottom: "6px" }}>
-                Gehe wieder zum Datensatz „3 Punkte" und stelle nacheinander die beiden oben angegebenen Geraden ein. Berechne jeweils den Loss <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Abstände der Punkte zu den Geraden am Graphen abliest und in die Formel für <InlineMath math={String.raw`L`} /> einsetzt.
+                Gehe wieder zum Datensatz „3 Punkte“ und stelle nacheinander die beiden oben angegebenen Geraden ein. Berechne jeweils den Verlust <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Abstände der Punkte zu den Geraden am Graphen abschätzt und in die Formel für <InlineMath math={String.raw`L`} /> einsetzt.
+              </li>
+              <li style={{ marginBottom: "6px" }}>
+                Berechne den Wert der Lossfunktion <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Formel für <InlineMath math={String.raw`L`} /> direkt für die drei angegebenen Punkte anwendest.
               </li>
               <li>
-                Berechne den Verlust <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Formel für <InlineMath math={String.raw`L`} /> direkt für die drei angegebenen Punkte anwendest.
+                Zusatzaufgabe:
+                <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Überlege dir einen Grund, warum die Abstände der Punkte zu der Geraden quadriert werden.</div>
               </li>
-              <li style={{ marginBottom: "6px" }}>Überlege dir einen Grund, warum die Abstände der Punkte zu der Geraden quadriert werden, anstatt sie einfach zu addieren.</li>
-
             </ol>
           </section>
         </div>
