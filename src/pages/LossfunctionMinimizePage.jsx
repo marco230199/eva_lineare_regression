@@ -382,7 +382,7 @@ export default function LossfunctionPage() {
 
               <div style={{ marginBottom: "16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "13px", fontWeight: "600" }}>
-                  <label>y-Achsenabschnitt b</label>
+                  <label>y-Achsenabschnitt t</label>
                   <span style={{ backgroundColor: "#21262d", padding: "4px 12px", borderRadius: "12px", fontSize: "12px" }}>{intercept.toFixed(2)}</span>
                 </div>
                 <input type="range" min={interceptMin} max={interceptMax} step="0.01" value={intercept} onChange={(e) => setIntercept(parseFloat(e.target.value))} style={{ width: "100%" }} />

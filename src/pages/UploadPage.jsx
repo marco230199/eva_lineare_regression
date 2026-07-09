@@ -451,7 +451,7 @@ export default function UploadPage() {
 
                 <div style={{ marginBottom: "16px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "13px", fontWeight: "600" }}>
-                    <label>y-Achsenabschnitt b</label>
+                    <label>y-Achsenabschnitt t</label>
                     <span style={{ backgroundColor: "#21262d", padding: "4px 12px", borderRadius: "12px", fontSize: "12px" }}>{formatNumber(activeIntercept)}</span>
                   </div>
                   <input type="range" min={interceptMin} max={interceptMax} step={Math.max((interceptMax - interceptMin) / 4000, 0.005)} value={activeIntercept} onChange={(event) => setIntercept(parseFloat(event.target.value))} style={{ width: "100%" }} />
