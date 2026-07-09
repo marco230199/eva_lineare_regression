@@ -138,25 +138,30 @@ export default function LineareRegressionPage() {
           <h1 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "8px" }}>Simulation: Lineare Regression</h1>
           <section style={{ color: "#c9d1d9", marginBottom: "16px", textAlign: "left", lineHeight: 1.55 }}>
             <h2 style={{ fontSize: "18px", fontWeight: "600", color: "#e6edf3", margin: "0 0 10px" }}>Lernaufgaben</h2>
-            <p style={{ margin: "0 0 10px" }}>Mach dich mit der Simulation vertraut.</p>
             <ol style={{ margin: 0, paddingLeft: "22px" }}>
-              <li style={{ marginBottom: "6px" }}>
-                Versuche für jeden Datensatz jeweils, eine Gerade durch die Punkte zu legen, die die Datenpunkte am besten beschreibt
-                und gib jeweils deren Funktionsgleichung an.
+              <li style={{ marginBottom: "8px" }}>
+                Analysiere die Datensätze (1) bis (5).
               </li>
-              <li style={{ marginBottom: "6px" }}>
-                Lese jeweils am Graphen ab oder berechne: (Mindestens drei Rechnungen)
+              <li style={{ marginBottom: "8px" }}>
+                Versuche, für jeden der Datensätze (1) bis (5) eine Gerade durch die Punkte zu legen, die die Datenpunkte möglichst gut beschreibt.
+              </li>
+              <li style={{ marginBottom: "8px" }}>
+                Lies mithilfe deiner Geraden jeweils die folgenden Werte ab. Wähle eines der Beispiele aus und berechne den gesuchten Wert zusätzlich mithilfe der in der Simulation angezeigten Geradengleichung.
                 <ul style={{ margin: "6px 0 0", paddingLeft: "22px" }}>
-                  <li>Jeweils die Schuhgröße einer Person mit einer Körpergröße von <InlineMath math={String.raw`1{,}77\,\mathrm{m}`} /> und <InlineMath math={String.raw`1{,}1\,\mathrm{m}`} />.</li>
+                  <li>Jeweils die Schuhgröße einer Person mit einer Körpergröße von <InlineMath math={String.raw`1{,}77\,\mathrm{m}`} /> beziehungsweise <InlineMath math={String.raw`1{,}10\,\mathrm{m}`} />.</li>
                   <li>Die Lerndauer einer Person mit der Note <InlineMath math={String.raw`2`} />.</li>
-                  <li>In der Stadt hat ein neues Sonnenbrillengeschäft aufgemacht. Damit wurden sehr viel mehr Sonnenbrillen als die letzten Jahre verkauft, 200 Sonnenbrillen an der Zahl. Berechne, wie viel Eiscreme verkauft wurde.</li>
-                  <li>Anzahl der Bakterien nach <InlineMath math={String.raw`20`} /> Tagen.</li>
-                  <li>Das Leistungsvermögen bei einm Stresslevel von <InlineMath math={String.raw`8.9`} />.</li>
+                  <li>In der Stadt hat ein neues Sonnenbrillengeschäft eröffnet. Dadurch wurden deutlich mehr Sonnenbrillen als in den vergangenen Jahren verkauft, und zwar insgesamt <InlineMath math={String.raw`200`} /> Stück. Berechne, wie viel Eiscreme verkauft wurde.</li>
+                  <li>Die Anzahl der Bakterien nach <InlineMath math={String.raw`20`} /> Tagen.</li>
+                  <li>Das Leistungsvermögen bei einem Stresslevel von <InlineMath math={String.raw`8{,}9`} />.</li>
                 </ul>
               </li>
-              <li>Beurteile, wie sinnvoll deine Vorhersagen sind.</li>
-              <li>Schau dir jetzt das unten eingebettete Video an und fülle damit die Lücken auf deinem Arbeitsblatt aus. </li>
-
+              <li style={{ marginBottom: "8px" }}>
+                Beurteile, wie sinnvoll deine Vorhersagen sind.
+              </li>
+              <li>
+                (Optional)<br />
+                Schaue dir nun das unten eingebettete Video an und fülle die Lücken auf deinem Arbeitsblatt aus.
+              </li>
             </ol>
           </section>
         </div>
