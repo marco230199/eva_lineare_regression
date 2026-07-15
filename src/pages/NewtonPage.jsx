@@ -118,6 +118,7 @@ export default function NewtonPage() {
   const [showStepLabels, setShowStepLabels] = useState(false);
   const [showCalculation, setShowCalculation] = useState(false);
   const [showDerivation, setShowDerivation] = useState(false);
+  const [openDerivationStep, setOpenDerivationStep] = useState(null);
   const maxIter = 12;
 
   const buildIterations = useCallback((expr, x0) => {
@@ -677,20 +678,7 @@ export default function NewtonPage() {
             </button>
           </div>
 
-          <div style={{ background: "#161b22", border: "1px solid #2d3f55", borderRadius: 10, padding: 16 }}>
-            <div style={{ fontSize: 11, letterSpacing: "0.15em", color: "#4a6080", marginBottom: 10, textTransform: "uppercase" }}>Steps</div>
-            {[
-              { color: "#f59e0b", label: "Current point xₙ on curve" },
-              { color: "#f59e0b", label: "Tangent line at xₙ", step: 1 },
-              { color: "#22c55e", label: "Zero of tangent → xₙ₊₁", step: 2 },
-              { color: "#22c55e", label: "Move xₙ₊₁ onto curve", step: 3 },
-            ].map((item, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, opacity: item.step === undefined || subStep >= item.step ? 1 : 0.35, transition: "opacity 0.3s" }}>
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: item.color, flexShrink: 0, boxShadow: `0 0 6px ${item.color}80` }} />
-                <span style={{ fontSize: 12, color: "#8b9db5" }}>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          {/* Steps box removed per request */}
 
           <div style={{ background: "#161b22", border: "1px dashed #2d3f5580", borderRadius: 10, padding: 12, color: "#4a6080", fontSize: 11 }}>
             🖱 Scroll to zoom · Drag to pan
@@ -754,68 +742,74 @@ export default function NewtonPage() {
           </h2>
 
           <div style={{ background: "#161b22", border: "1px solid #2d3f55", borderRadius: 10, padding: 20, color: "#c9d1d9", lineHeight: 1.65 }}>
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#e6edf3", margin: "0 0 12px" }}>
-                1. Schritt: Startwert wählen und Punkt P bestimmen
-              </h3>
-              <p style={{ margin: 0, marginBottom: 10 }}>
-                Wähle einen Startwert <InlineMath math={String.raw`x_0`} /> auf der x-Achse und damit einen Punkt P <InlineMath math={String.raw`(x_0 | f(x_0))`} /> auf dem Graphen <InlineMath math={String.raw`G_f`} />.
-              </p>
-            </div>
+            {/** Buttons for each derivation step; click to reveal math/text **/}
+            <div style={{ display: "grid", gap: 12 }}>
+              <button className="reset-btn" onClick={() => setOpenDerivationStep(openDerivationStep === 1 ? null : 1)} style={{ textAlign: "left", width: "100%" }}>
+                {openDerivationStep === 1 ? "▼ " : "▶ "}1. Schritt: Startwert wählen und Punkt P bestimmen
+              </button>
+              {openDerivationStep === 1 && (
+                <div style={{ paddingLeft: 8 }}>
+                  <p style={{ margin: 0, marginBottom: 10 }}>
+                    Wähle einen Startwert <InlineMath math={String.raw`x_0`} /> auf der x-Achse und damit einen Punkt P <InlineMath math={String.raw`(x_0 | f(x_0))`} /> auf dem Graphen <InlineMath math={String.raw`G_f`} />.
+                  </p>
+                </div>
+              )}
 
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#e6edf3", margin: "0 0 12px" }}>
-                2. Schritt: Tangentengleichung durch diesen Punkt bestimmen
-              </h3>
-              <BlockMath math={String.raw`T: y = mx + t`} />
-              <BlockMath math={String.raw`m = f'(x_0)`} />
-              <p style={{ margin: 0, marginBottom: 10 }}>
-                Punkt P liegt auf der Tangente, daher:
-              </p>
-              <BlockMath math={String.raw`\begin{align*}
-                y &= mx + t \\
-                f(x_0) &= f'(x_0) \cdot x_0 + t \\
-                t &= f(x_0) - f'(x_0) \cdot x_0
-              \end{align*}`} />
-              <p style={{ margin: 0, marginBottom: 10 }}>
-                Die Tangentengleichung ist:
-              </p>
-              <BlockMath math={String.raw`\begin{align*}
-                T: y &= f'(x_0) \cdot x + f(x_0) - f'(x_0) \cdot x_0 \\
-                &= f'(x_0) \cdot (x - x_0) + f(x_0)
-              \end{align*}`} />
-            </div>
+              <button className="reset-btn" onClick={() => setOpenDerivationStep(openDerivationStep === 2 ? null : 2)} style={{ textAlign: "left", width: "100%" }}>
+                {openDerivationStep === 2 ? "▼ " : "▶ "}2. Schritt: Tangentengleichung durch diesen Punkt bestimmen
+              </button>
+              {openDerivationStep === 2 && (
+                <div style={{ paddingLeft: 8 }}>
+                  <BlockMath math={String.raw`T: y = mx + t`} />
+                  <BlockMath math={String.raw`m = f'(x_0)`} />
+                  <p style={{ margin: 0, marginBottom: 10 }}>Punkt P liegt auf der Tangente, daher:</p>
+                  <BlockMath math={String.raw`\begin{align*}
+                    y &= mx + t \\
+                    f(x_0) &= f'(x_0) \cdot x_0 + t \\
+                    t &= f(x_0) - f'(x_0) \cdot x_0
+                  \end{align*}`} />
+                  <p style={{ margin: 0, marginBottom: 10 }}>Die Tangentengleichung ist:</p>
+                  <BlockMath math={String.raw`\begin{align*}
+                    T: y &= f'(x_0) \cdot x + f(x_0) - f'(x_0) \cdot x_0 \\
+                    &= f'(x_0) \cdot (x - x_0) + f(x_0)
+                  \end{align*}`} />
+                </div>
+              )}
 
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#e6edf3", margin: "0 0 12px" }}>
-                3. Schritt: Schnittpunkt der Tangente mit der x-Achse bestimmen
-              </h3>
-              <p style={{ margin: 0, marginBottom: 10 }}>
-                Setze <InlineMath math={String.raw`y = 0`} />:
-              </p>
-              <BlockMath math={String.raw`\begin{align*}
-                0 &= f'(x_0) \cdot (x - x_0) + f(x_0) \\
-                -f(x_0) &= f'(x_0) \cdot (x - x_0) \\
-                -\frac{f(x_0)}{f'(x_0)} &= x - x_0 \\
-                x &= x_0 - \frac{f(x_0)}{f'(x_0)}
-              \end{align*}`} />
-            </div>
+              <button className="reset-btn" onClick={() => setOpenDerivationStep(openDerivationStep === 3 ? null : 3)} style={{ textAlign: "left", width: "100%" }}>
+                {openDerivationStep === 3 ? "▼ " : "▶ "}3. Schritt: Schnittpunkt der Tangente mit der x-Achse bestimmen
+              </button>
+              {openDerivationStep === 3 && (
+                <div style={{ paddingLeft: 8 }}>
+                  <p style={{ margin: 0, marginBottom: 10 }}>Setze <InlineMath math={String.raw`y = 0`} />:</p>
+                  <BlockMath math={String.raw`\begin{align*}
+                    0 &= f'(x_0) \cdot (x - x_0) + f(x_0) \\
+                    -f(x_0) &= f'(x_0) \cdot (x - x_0) \\
+                    -\frac{f(x_0)}{f'(x_0)} &= x - x_0 \\
+                    x &= x_0 - \frac{f(x_0)}{f'(x_0)}
+                  \end{align*}`} />
+                </div>
+              )}
 
-            <div style={{ marginBottom: 24 }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#e6edf3", margin: "0 0 12px" }}>
-                4. Schritt: Wiederholen
-              </h3>
-              <p style={{ margin: 0, marginBottom: 10 }}>
-                Wiederhole die Schritte mit dem nächsten Wert <InlineMath math={String.raw`x_1`} />, bis sich die Ergebnisse kaum noch ändern.
-              </p>
-            </div>
+              <button className="reset-btn" onClick={() => setOpenDerivationStep(openDerivationStep === 4 ? null : 4)} style={{ textAlign: "left", width: "100%" }}>
+                {openDerivationStep === 4 ? "▼ " : "▶ "}4. Schritt: Wiederholen
+              </button>
+              {openDerivationStep === 4 && (
+                <div style={{ paddingLeft: 8 }}>
+                  <p style={{ margin: 0, marginBottom: 10 }}>
+                    Wiederhole die Schritte mit dem nächsten Wert <InlineMath math={String.raw`x_1`} />, bis sich die Ergebnisse kaum noch ändern.
+                  </p>
+                </div>
+              )}
 
-            <div style={{ background: "#0d1117", border: "2px solid #38bdf8", borderRadius: 8, padding: 16, marginTop: 20 }}>
-              <p style={{ margin: 0, marginBottom: 8, color: "#38bdf8", fontWeight: 600 }}>
-                📌 Iterative Formel des Newtonverfahrens:
-              </p>
-              <BlockMath math={String.raw`x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}`} />
+              <div style={{ background: "#0d1117", border: "2px solid #38bdf8", borderRadius: 8, padding: 16, marginTop: 6 }}>
+                <p style={{ margin: 0, marginBottom: 8, color: "#38bdf8", fontWeight: 600 }}>
+                  📌 Iterative Formel des Newtonverfahrens:
+                </p>
+                <BlockMath math={String.raw`x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}`} />
+              </div>
             </div>
+          </div>
           </div>
         </div>
       )}

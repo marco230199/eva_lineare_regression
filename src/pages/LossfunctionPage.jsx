@@ -211,9 +211,11 @@ export default function LossfunctionPage() {
                 <div style={{ color: "#8b949e", fontStyle: "italic", marginTop: "4px" }}>Klicke jetzt auf „Lossfunktion anzeigen“. Das ist die Formel, mit der ausgerechnet wird, wie gut die Gerade durch die Punkte gelegt wurde. Erkläre diese Formel mithilfe des Graphen.</div>
               </li>
               <li style={{ marginBottom: "6px" }}>
+                Optional:
                 Gehe wieder zum Datensatz „3 Punkte“ und stelle nacheinander die beiden oben angegebenen Geraden ein. Berechne jeweils den Verlust <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Abstände der Punkte zu den Geraden am Graphen abschätzt und in die Formel für <InlineMath math={String.raw`L`} /> einsetzt.
               </li>
               <li style={{ marginBottom: "6px" }}>
+                Optional:
                 Berechne den Wert der Lossfunktion <InlineMath math={String.raw`L`} /> für beide Geraden, indem du die Formel für <InlineMath math={String.raw`L`} /> direkt für die drei angegebenen Punkte anwendest.
               </li>
               <li>
