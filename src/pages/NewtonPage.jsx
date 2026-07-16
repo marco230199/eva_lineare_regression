@@ -810,7 +810,6 @@ export default function NewtonPage() {
               </div>
             </div>
           </div>
-          </div>
         </div>
       )}
     </div>
