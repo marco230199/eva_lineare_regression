@@ -541,46 +541,33 @@ export default function NewtonPage() {
   </h1>
 
     <div style={{ color: "#c9d1d9", lineHeight: 1.55, fontSize: 14 }}>
-        <p style={{ marginBottom: 10 }}>
-          Du hast gelernt, dass Computer Regressionsgeraden durch das Minimieren der Lossfunktion bestimmen können, auch wenn es sich um sehr große Datenmengen handelt.
-        </p>
-
-        <p style={{ marginBottom: 10 }}>
-          Es gibt jedoch auch Szenarien, in denen es schwieriger ist, die Lossfunktion zu minimieren.
-        </p>
-
-        <p style={{ marginBottom: 16 }}>
-          Hier kommen dann Näherungsverfahren zum Einsatz. Eines dieser Verfahren ist das <strong>Newtonverfahren</strong>. Es ermöglicht es, die Nullstellen einer Funktion zu bestimmen.
-        </p>
-
         <h2 style={{ fontSize: "18px", fontWeight: "600", color: "#e6edf3", margin: "0 0 10px" }}>
           Lernaufgaben
         </h2>
 
         <ol style={{ margin: 0, paddingLeft: "22px" }}>
-          <li style={{ marginBottom: "6px" }}>
+          <li style={{ marginBottom: "8px" }}>
             Berechne die Nullstellen der Funktion <InlineMath math={String.raw`f(x) = \frac{1}{3}x^3 - x^2 - \frac{1}{3}`} />. Was fällt dir auf?
           </li>
 
-          <li style={{ marginBottom: "6px" }}>
-            Mache dich jetzt mit der Simulation zum Newtonverfahren vertraut. Wähle zunächst die Funktion <InlineMath math={String.raw`f(x) = 3\ln(x)-5`} /> mit dem Startwert <InlineMath math={String.raw`x_0 = 0.2`} /> aus. Klicke dich mithilfe des Buttons „Nächster Schritt“ langsam durch die Simulation und beschreibe in Schritten, wie das Newtonverfahren funktioniert. Du kannst dein Ergebnis mithilfe des Buttons „Schritte benennen“ überprüfen.
+          <li style={{ marginBottom: "8px" }}>
+            Mache dich jetzt mit der Simulation zum Newtonverfahren vertraut. Wähle zunächst die Funktion <InlineMath math={String.raw`f(x) = 3\ln(x) - 5`} /> mit dem Startwert <InlineMath math={String.raw`x_0 = 0.2`} /> aus. Klicke dich mithilfe des Buttons „Nächster Schritt“ langsam durch die Simulation und beschreibe in Schritten, wie das Newtonverfahren funktioniert. Du kannst dein Ergebnis mithilfe des Buttons „Schritte benennen“ überprüfen.
           </li>
 
-          <li style={{ marginBottom: "6px" }}>
-            Zeichne in den abgebildeten Graphen die ersten drei Durchgänge des Newtonverfahrens ein.
+          <li style={{ marginBottom: "8px" }}>
+            Zeichne in den abgebildeten Graphen im Kasten „Das Newtonverfahren“ die ersten drei Durchgänge des Newtonverfahrens ein.
           </li>
 
-          <li style={{ marginBottom: "6px" }}>
-            Verwende jetzt die Funktion <InlineMath math={String.raw`f(x) = x^3 - 2x + 2`} /> und starte das Newtonverfahren mit unterschiedlichen Startwerten <InlineMath math={String.raw`x_0`} />. Findet das Verfahren immer die Nullstellen der Funktion?
+          <li style={{ marginBottom: "8px" }}>
+            Durch den Button „Herleitung der Iterationsformel“ kannst du dir anschauen, wie mithilfe des Newtonverfahrens rechnerisch die Nullstellen von Funktionen angenähert werden können.
+          </li>
+
+          <li style={{ marginBottom: "8px" }}>
+            Wende das Newtonverfahren zweimal an, um die Nullstellen der Funktion <InlineMath math={String.raw`f(x) = \frac{1}{3}x^3 - x^2 - \frac{1}{3}`} /> anzunähern. Du kannst den Button „Rechnung anzeigen“ oder die Tabelle unterhalb des Graphen verwenden, um deine Ergebnisse schrittweise zu überprüfen.
           </li>
 
           <li>
-            Der Button "Herleitung der Iterationsformel" zeigt, wie die vier Schritte rechnerisch durchgeührt werden. Dies führt zur sogenannten 
-            Iterationsformel des Newtonverfahrens. 
-          </li>
-          <li style={{ marginBottom: "6px" }}>
-          Wende das Newtonverfahren zweimal an, um die Nullstellen der Funktion <InlineMath math={String.raw`f(x) = \frac{1}{3}x^3 - x^2 - \frac{1}{3}`} /> anzunähern. Du kannst den Button „Rechnung anzeigen“ oder die Tabelle unterhalb des Graphen verwenden, 
-          um deine Ergebnisse schrittweise zu überprüfen. Wähle als Startwert <InlineMath math={String.raw`x_0 = 2,5`} /> .
+            Verwende jetzt die Funktion <InlineMath math={String.raw`f(x) = x^3 - 2x + 2`} /> und starte das Newtonverfahren mit unterschiedlichen Startwerten <InlineMath math={String.raw`x_0`} />. Findet das Verfahren immer die Nullstellen der Funktion?
           </li>
         </ol>
       </div>
