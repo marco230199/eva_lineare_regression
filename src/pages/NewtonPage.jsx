@@ -8,6 +8,7 @@ const EXAMPLES = [
   { label: "x² − 2", fn: "x**2 - 2" },
   { label: "sin(x)", fn: "sin(x)" },
   { label: "eˣ − 3", fn: "exp(x) - 3" },
+  {label:  "3ln(x)-5", fn: "3*ln(x)-5"}                           }
 ];
 
 const STEP_LABELS = ["Tangente durch Punkt P anlegen", "Nullstelle der Tangente bestimmen", "Nullstelle als neuen Startwert verwenden"];
