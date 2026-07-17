@@ -3,12 +3,12 @@ import katex from "katex";
 
 const DEFAULT_VIEW = { xMin: -6, xMax: 6, yMin: -8, yMax: 8 };
 const EXAMPLES = [
-  { label: "x³ − x − 2", fn: "x**3 - x - 2" },
-  { label: "cos(x) − x", fn: "cos(x) - x" },
-  { label: "x² − 2", fn: "x**2 - 2" },
-  { label: "sin(x)", fn: "sin(x)" },
-  { label: "eˣ − 3", fn: "exp(x) - 3" },
-  {label:  "3ln(x)-5", fn: "3*ln(x)-5"}                           }
+  { label: "x³ − x − 2", fn: "x**3 - x - 2", startX: "2" },
+  { label: "cos(x) − x", fn: "cos(x) - x", startX: "1" },
+  { label: "x² − 2", fn: "x**2 - 2", startX: "2" },
+  { label: "sin(x)", fn: "sin(x)", startX: "1" },
+  { label: "eˣ − 3", fn: "exp(x) - 3", startX: "1" },
+  { label: "3ln(x) - 5", fn: "3*ln(x)-5", startX: "0.2" },
 ];
 
 const STEP_LABELS = ["Tangente durch Punkt P anlegen", "Nullstelle der Tangente bestimmen", "Nullstelle als neuen Startwert verwenden"];
@@ -590,7 +590,15 @@ export default function NewtonPage() {
             {fnError && <div style={{ color: "#ef4444", fontSize: 11, marginTop: 4 }}>Invalid expression</div>}
             <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
               {EXAMPLES.map((ex) => (
-                <button key={ex.fn} className="example-chip" onClick={() => { setRawInput(ex.fn); handleFnChange(ex.fn); }}>
+                <button
+                  key={ex.fn}
+                  className="example-chip"
+                  onClick={() => {
+                    setRawInput(ex.fn);
+                    setStartX(ex.startX ?? "2");
+                    handleFnChange(ex.fn);
+                  }}
+                >
                   {ex.label}
                 </button>
               ))}
